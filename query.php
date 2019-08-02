@@ -16,12 +16,13 @@
 		$res = json_decode($str,true);
 		$page = new Pagination($res['list']['count'], 10);
 		$page->pagerCount = 8;
+
 ?>
 <!doctype html>
 <html>
         <head>
             <meta charset='utf-8'/>
-            <title><?php echo $title; ?></title>
+            <title><?php echo $title; ?>-<?php echo $kw;?>-第<?php echo $p;?>页</title>
             <meta content="width=device-width,initial-scale=1.0" name="viewport">
             <link rel="icon" type="image/x-icon" href="<?php echo $icon; ?>">
             <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/bootstrap/3.0.0/css/bootstrap.min.css">
@@ -29,8 +30,8 @@
             <script type="text/javascript" src="//img.liangmlk.top/Public/Js/bootstrap.min.js"></script>
             <script type="text/javascript" src="tag.js"></script>
             <link rel="stylesheet" type="text/css" href="page.css">
-            <meta name="keywords"    content="<?php echo $keyword; ?>">
-            <meta name="description" content="<?php echo $description; ?>">
+            <meta name="keywords"    content="<?php echo $kw;?>|<?php echo $keyword; ?>">
+            <meta name="description" content="<?php echo $kw;?>,<?php echo $description; ?>">
             <style>
             	a {
             		text-decoration: none;
@@ -91,7 +92,13 @@
 						</div>
 					</div>
 				</div>
-
+				<script>
+        			function redict(url,title,des){
+        				document.cookie="title="+title;
+        				document.cookie="des="+des; 
+        				window.location.href=url;
+        			}
+        		</script>
                 <div class='container' style=''>
                 		<div class='row'>
                 			<div class='alert alert-danger'>
@@ -103,15 +110,16 @@
                 			</div>
                 		</div>
                 		<?php foreach($res['list']['data'] as $k=>$v){ ?>
+                		<?php $url = str_replace(array('http://yun.baidu.com/s/','http://pan.baidu.com/s/','https://pan.baidu.com/s/'),'',$v['blink']);   ?>
                 		<div class='row'>
                 				<div class='col-md-12'>
-	                				<h3><a href='<?php echo $v['blink'];?>' target='_blank' rel="noreferrer external nofollow"><?php echo $v['title'];?></a></h3>
-	                				<a  href='<?php echo $v['blink'];?>' target='_blank' rel="noreferrer external nofollow"><?php echo $v['blink'];?></a>
-	                				<div class='' style='color:red;'><?php echo $v['des'];?></div>
+									<h3><a onclick="redict('/detail.php?url=<?php echo $url; ?>','<?php echo $v['title'];?>','<?php echo empty($v['des'])?'暂无信息':$v['des']; ?>')" target='_blank'><?php echo $v['title'];?></a></h3>
+	                				<div class='' style='color:red;'><?php echo empty($v['des'])?'暂无信息':$v['des']; ?></div>
 	                			</div>
                 		</div>
                 		<br/>
                 		<?php } ?>
+
                 		<br />
                 		<div class='row'>
                 			<div class='col-md-12 text-center'>

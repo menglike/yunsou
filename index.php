@@ -2,11 +2,11 @@
     require "common.php";
     require "config.php";
 
-    $file = __DIR__.'/index.json';
+    /*$file = __DIR__.'/index.json';
     if(file_exists($file) and time()-filemtime($file)<8*3600 ){
         $res = json_decode( file_get_contents(__DIR__.'/index.json') ,true);
         $r = array_chunk($res,30);
-    }else{
+    }else{*/
         $url = 'http://ssapi.liangmlk.cn/Pan-hotwords-ak-'.$ak.'.html';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -15,7 +15,7 @@
         file_put_contents($file, $res);
         $res = json_decode( $res ,true);
         $r = array_chunk($res,30);
-    }
+    //}
 ?>
 <!doctype html>
 <html>

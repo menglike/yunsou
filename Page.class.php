@@ -1,7 +1,7 @@
 <?php
 function convertUrlQuery ($url) {
   $res = parse_url($url);
-  if (!$res['query']) return [];
+  if (!$res['query']) return array();
   $query = explode('&', $res['query']);
   $params = array();
   foreach ($query as $param) {
@@ -11,7 +11,7 @@ function convertUrlQuery ($url) {
   return $params;
 }
 function array2Query ($arr) {
-  $keys = [];
+  $keys = array();
   foreach ($arr as $key => $val) {
     array_push($keys, $key. '=' .$val);
   }
@@ -29,9 +29,9 @@ class Pagination {
   // 显示页数
   public $pagerCount = 10;
   // 候选页码
-  private $pageSizes = [5, 10, 20, 30, 40];
+  private $pageSizes = array(5, 10, 20, 30, 40);
   
-  private $querys = [];
+  private $querys = array();
   public $prevText = 'Prve';
   public $nextText = 'Next';
   private $queryPageField = 'p';
@@ -45,7 +45,7 @@ class Pagination {
     $this->setQueryField();
     $this->resize();
   }
-  function setQueryField ($arr = []) {
+  function setQueryField ($arr = array()) {
     if (array_key_exists('page', $arr) && $arr['page']) {
       $this->queryPageField = $arr['page'];
     }
@@ -102,7 +102,7 @@ class Pagination {
         $showNextMore = true;
       }
     }
-    $pagers = [];
+    $pagers = array();
   
     if ($showPrevMore && !$showNextMore) {
       $startPage = $pageCount - ($pagerCount - 2);
@@ -130,10 +130,10 @@ class Pagination {
   function linkUrl ($page) {
     $path = $_SERVER['SCRIPT_NAME'];
     $queryString = array2Query($this->querys);
-    $params = [
+    $params = array(
       $this->queryPageField. '=' .$page,
       $this->queryPageSizeField. '=' .$this->pageSize
-    ];
+    );
     $url = $path. '?' .join('&', $params).($queryString ? '&'.$queryString : '');
     return $url;
   }
@@ -144,7 +144,7 @@ class Pagination {
   // 页码部分html
   private function pagerHTML () {
     $pagers = $this->pager();
-    $htmls = ['<ul class="m-pager">'];
+    $htmls = array('<ul class="m-pager">');
     $pagerCountOffset = $this->pagerCount - 2;
     if ($this->pageCount > 0) {
       array_push($htmls, '<li class="m-pager-number'. ($this->page === 1 ? ' active' : '') .'">'. $this->link('1') .'</li>');
@@ -168,9 +168,9 @@ class Pagination {
   private function sizesHTML () {
     $action = $path = $_SERVER['SCRIPT_NAME']. '?' .array2Query($this->querys). '&'. $this->queryPageField .'=1';
     $handlerChangeScript = "(function (e) {location.href='". $action ."' + '&". $this->queryPageSizeField ."=' + e.value;})(this)";
-    $htmls = [
+    $htmls = array(
       '<select class="m-pagination-sizes" name="'. $this->queryPageSizeField .'" onchange="'. $handlerChangeScript .'">'
-    ];
+    );
     $len = count($this->pageSizes);
     for ($i = 0; $i < $len; $i++) {
       array_push($htmls, '<option value="'. $this->pageSizes[$i] .'"'. ($this->pageSize == $this->pageSizes[$i] ? 'selected="selected"' : '') .'>'. $this->pageSizes[$i] .' 条/页</option>');
@@ -189,15 +189,15 @@ class Pagination {
     return '<span class="m-pagination-next'. ($this->page === $this->pageCount ? ' disabled' : '') .'">'. $this->link($page, $this->nextText) .'</span>';
   }
   // 输出分页
-  function links ($layouts = ['total', 'sizes', 'prev', 'pager', 'next']) {
-    $layoutMap = [
+  function links ($layouts = array('total', 'sizes', 'prev', 'pager', 'next')) {
+    $layoutMap = array(
       'total' => '<span class="m-pagination-total">共'. $this->total .'条</span>',
       'sizes' => $this->sizesHTML(),
       'prev' => $this->prevHTML(),
       'pager' => $this->pagerHTML(),
       'next' => $this->nextHTML()
-    ];
-    $htmls = ['<div class="m-pagination is-background'. ($this->containerClassName ? ' '. $this->containerClassName : '') .'">'];
+    );
+    $htmls = array('<div class="m-pagination is-background'. ($this->containerClassName ? ' '. $this->containerClassName : '') .'">');
     if (!is_array($layouts)) {
       throw new Exception('One params must be an Array.');
     }
@@ -211,15 +211,15 @@ class Pagination {
   
   // 简单分页
   function simpleLinks () {
-    return $this->links(['prev', 'next']);
+    return $this->links(array('prev', 'next'));
   }
   function getPageData () {
-    $data = [
+    $data =array( 
       'total' => $this->total,
       'page' => $this->page,
       'pageSize' => $this->pageSize,
       'pageCount' => $this->pageCount
-    ];
+    );
     return $data;
   }
 }
